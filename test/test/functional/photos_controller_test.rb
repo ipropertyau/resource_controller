@@ -3,7 +3,7 @@ require 'test_helper'
 class PhotosControllerTest < ActionController::TestCase
   def setup
     @user = users :one
-    @photo = Photo.find 1
+    @photo = photos :one
   end
 
   context "actions specified" do
@@ -22,7 +22,7 @@ class PhotosControllerTest < ActionController::TestCase
 
   # RESTful test
   #
-  context "on GET to index" do
+  context "on GET to :index" do
     setup do
       get :index, :user_id => 1
     end
@@ -94,7 +94,7 @@ class PhotosControllerTest < ActionController::TestCase
       get :edit, :id => @photo.id
     end
 
-    should assign_to(:photo).with(@photo)
+    should assign_to(:photo).with { @photo }
     should respond_with :success
     should render_with_layout :photos
     should render_template :edit
@@ -107,7 +107,7 @@ class PhotosControllerTest < ActionController::TestCase
         delete :destroy, :id => @photo.id
       end
 
-      should assign_to(:photo){ @photo }
+      should assign_to(:photo).with { @photo }
       should redirect_to("photos index"){ photos_path }
       should set_the_flash.to "Successfully removed!"
     end

@@ -3,10 +3,10 @@ require 'test_helper'
 class CommentsControllerTest < ActionController::TestCase
   def setup
     @post = posts :one
-    @comment = Comment.find 1
+    @comment = comments :one
   end
 
-  context "on GET to index" do
+  context "on GET to :index" do
     setup do
       get :index, :post_id => 1
     end
@@ -78,7 +78,7 @@ class CommentsControllerTest < ActionController::TestCase
       get :edit, :id => @comment.id
     end
 
-    should assign_to(:comment).with(@comment)
+    should assign_to(:comment).with { @comment }
     should respond_with :success
     should render_with_layout :comments
     should render_template :edit
@@ -91,7 +91,7 @@ class CommentsControllerTest < ActionController::TestCase
         put :update, :id => @comment.id, :comment => {:body => 'My new comment'}
       end
 
-      should assign_to(:comment){ @comment }
+      should assign_to(:comment).with { @comment }
       should redirect_to("comment page") { comment_path(assigns(:comment)) }
       should set_the_flash.to "Successfully updated!"
 
@@ -122,7 +122,7 @@ class CommentsControllerTest < ActionController::TestCase
         delete :destroy, :id => @comment.id
       end
 
-      should assign_to(:comment){ @comment }
+      should assign_to(:comment).with { @comment }
       should redirect_to("comments index"){ comments_path }
       should set_the_flash.to "Successfully removed!"
     end

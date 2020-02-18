@@ -5,7 +5,7 @@ class UsersControllerTest < ActionController::TestCase
     @dude = accounts :one
   end
 
-  context "on GET to index" do
+  context "on GET to :index" do
     setup do
       get :index
     end
@@ -74,7 +74,7 @@ class UsersControllerTest < ActionController::TestCase
       get :edit, :id => @dude.id
     end
 
-    should assign_to(:dude).with(@dude)
+    should assign_to(:dude).with { @dude }
     should respond_with :success
     should render_with_layout :application
     should render_template :edit
@@ -87,7 +87,7 @@ class UsersControllerTest < ActionController::TestCase
         put :update, :id => @dude.id, :dude => {:name => 'My new user'}
       end
 
-      should assign_to(:dude){ @dude }
+      should assign_to(:dude).with { @dude }
       should redirect_to("dude page") { dude_path(assigns(:dude)) }
       should set_the_flash.to "Successfully updated!"
 
@@ -118,7 +118,7 @@ class UsersControllerTest < ActionController::TestCase
         delete :destroy, :id => @dude.id
       end
 
-      should assign_to(:dude){ @dude }
+      should assign_to(:dude).with { @dude }
       should redirect_to("dudes index"){ dudes_url }
       should set_the_flash.to "Successfully removed!"
     end

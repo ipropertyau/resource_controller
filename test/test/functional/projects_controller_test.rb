@@ -5,7 +5,7 @@ class ProjectsControllerTest < ActionController::TestCase
     @project = projects :one
   end
 
-  context "on GET to index" do
+  context "on GET to :index" do
     setup do
       get :index
     end
@@ -74,7 +74,7 @@ class ProjectsControllerTest < ActionController::TestCase
       get :edit, :id => @project.id
     end
 
-    should assign_to(:project).with(@project)
+    should assign_to(:project).with { @project }
     should respond_with :success
     should render_with_layout :projects
     should render_template :edit
@@ -87,7 +87,7 @@ class ProjectsControllerTest < ActionController::TestCase
         put :update, :id => @project.id, :project => {:title => 'My new project'}
       end
 
-      should assign_to(:project){ @project }
+      should assign_to(:project).with { @project }
       should redirect_to("project page") { project_path(assigns(:project)) }
       should set_the_flash.to "Successfully updated!"
 
@@ -118,7 +118,7 @@ class ProjectsControllerTest < ActionController::TestCase
         delete :destroy, :id => @project.id
       end
 
-      should assign_to(:project){ @project }
+      should assign_to(:project).with { @project }
       should redirect_to("projects index"){ projects_path }
       should set_the_flash.to "Successfully removed!"
     end

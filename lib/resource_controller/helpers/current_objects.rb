@@ -14,7 +14,7 @@ module ResourceController
         # In order to customize the way the collection is fetched, to add something like pagination, for example, override this method.
         #
         def collection
-          end_of_association_chain.find(:all)
+          @collection ||= end_of_association_chain.all
         end
 
         # Returns the current param.
@@ -39,16 +39,7 @@ module ResourceController
         #   end
         #
         def object
-          return @object if param.blank?
-          if (Integer(param) rescue false)
-            @object ||= end_of_association_chain.find(param)
-          else
-            if end_of_association_chain.respond_to? :find_by_param!
-              @object ||= end_of_association_chain.find_by_param!(param)
-            elsif end_of_association_chain.respond_to? :find_by_permalink
-              @object ||= end_of_association_chain.find_by_permalink(param)
-            end
-          end
+          @object ||= end_of_association_chain.find(param) unless param.nil?
           @object
         end
 
@@ -69,7 +60,8 @@ module ResourceController
         # Returns the form params.  Defaults to params[model_name] (i.e. params["post"])
         #
         def object_params
-          params["#{object_name}"]
+          white_listed_params_method_name = "#{object_name}_params"
+          (!self.respond_to?(white_listed_params_method_name, true) || params[object_name].nil? ? params[object_name] : self.send(white_listed_params_method_name))
         end
 
         # Builds the object, but doesn't save it, during the new, and create action.
